@@ -7,6 +7,8 @@ public class TreeGenerator : MonoBehaviour
     public static Action<int> treesGenerated = delegate { };
     
     [SerializeField] private GameObject ground, treePrefab;
+
+    [SerializeField] private Color leavesColorLight, leavesColorDark;
     [SerializeField] private float minDistance, maxDistance;
     [SerializeField] private float zVariance, scaleVariance;
 
@@ -38,6 +40,15 @@ public class TreeGenerator : MonoBehaviour
                 tree.transform.localScale = Vector3.one * (1 + Random.Range(0, scaleVariance) / 10f);
 
                 tree.transform.parent = parent.transform;
+                
+                var props1 = new MaterialPropertyBlock();
+                var props2 = new MaterialPropertyBlock();
+                props1.SetColor("_Color", Color.Lerp(leavesColorLight, leavesColorDark, Random.value));
+                props2.SetColor("_Color", Color.Lerp(leavesColorLight, leavesColorDark, Random.value));
+                
+                MeshRenderer renderer = tree.GetComponent<MeshRenderer>();
+                renderer.SetPropertyBlock(props1, 2);
+
                 count++;
             }
         }
